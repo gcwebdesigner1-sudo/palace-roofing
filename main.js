@@ -42,6 +42,18 @@
   const io = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle('in', e.isIntersecting)), { threshold: 0.15 });
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
+  // scroll spy: underline the menu tab for the section on screen
+  const links = [...document.querySelectorAll('.nav ul a[href^="#"]')];
+  const ids = links.map(a => a.getAttribute('href').slice(1));
+  const spy = () => {
+    const y = scrollY + innerHeight * 0.35;
+    let cur = ids[0];
+    ids.forEach(id => { const s = document.getElementById(id); if (s && s.offsetTop <= y) cur = id; });
+    links.forEach(a => a.toggleAttribute('aria-current', a.getAttribute('href') === '#' + cur));
+  };
+  addEventListener('scroll', spy, { passive: true });
+  spy();
+
   // gallery lightbox
   const gal = document.querySelector('.gallery');
   if (gal) {
